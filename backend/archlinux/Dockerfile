@@ -18,6 +18,7 @@ COPY . /project
 WORKDIR /project
 
 
+
 RUN esy install
 RUN node .github/workflows/gha.js restore
 RUN node .github/workflows/gha.js build
