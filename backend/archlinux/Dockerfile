@@ -4,6 +4,7 @@ ARG acu
 ENV ACTIONS_CACHE_URL=$acu
 ARG aru
 ENV ACTIONS_RUNTIME_URL=$acu
+RUN echo $ACTIONS_RUNTIME_URL $ACTIONS_CACHE_URL
 
 RUN pacman -Syu --noconfirm
 RUN pacman -S --noconfirm base base-devel git npm perl
