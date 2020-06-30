@@ -15,8 +15,9 @@ RUN npm install --verbose --global --unsafe-perm=true esy@0.6.6
 
 
 COPY . /project
-WORKDIR /project
-
+WORKDIR /project/backend
+RUN pwd
+RUN ls -la
 
 
 RUN esy install
