@@ -47,7 +47,7 @@ let my_exec = (name, cmd) => {
     console.error("usage: node script save|restore|build");
   switch (process.argv[2]) {
     case "save":
-      await hashLockDir(patterns, key => {
+      await hashLockDir(patterns, async key => {
         await cache.saveCache([path], key)
       })
       break;

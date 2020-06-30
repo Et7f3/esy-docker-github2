@@ -15,12 +15,13 @@ RUN npm install --verbose --global --unsafe-perm=true esy@0.6.6
 
 
 COPY . /project
+RUN ls / /project
 WORKDIR /project/backend
 RUN pwd
 RUN ls -la
 
 
 RUN esy install
-RUN node .github/workflows/gha.js restore
-RUN node .github/workflows/gha.js build
-RUN node .github/workflows/gha.js save
+RUN node ../.github/workflows/gha.js restore
+RUN node ../.github/workflows/gha.js build
+RUN node ../.github/workflows/gha.js save
