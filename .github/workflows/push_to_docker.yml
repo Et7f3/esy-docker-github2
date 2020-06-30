@@ -1,0 +1,56 @@
+name: Validate Pull Request
+
+on:
+  push:
+# BEGIN MONOREPO CODE
+    paths:
+      - 'backend/**'
+# END MONOREPO CODE
+    branches:
+      - master
+
+jobs:
+  build_docker:
+# BEGIN MONOREPO CODE
+    defaults:
+      run:
+        working-directory: backend
+# END MONOREPO CODE
+    name: Build inside a docker
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [archlinux]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup docker variables
+        id: setup_docker
+        uses: actions/github-script@v2
+        env:
+          os_name: ${{ matrix.os }}
+          repository: ${{ github.repository }}
+          repository_owner: ${{ github.repository_owner }}
+        with:
+          script: |
+            const repository_lowercase = process.env.repository.toLowerCase();
+            const repository_name = process.env.repository.substr(process.env.repository_owner.length + 1);
+            const image_name = repository_name + "-" + process.env.os_name;
+            const dbg = (...args) => {
+              core.setOutput(...args);
+              console.log(...args);
+            }
+            dbg("repository_lowercase", repository_lowercase);
+            dbg("repository_name", repository_name);
+            dbg("image_name", image_name);
+            dbg("docker_url", `docker.pkg.github.com/${repository_lowercase}/${image_name}:`);
+            // We will-pick id later
+      - run: echo -n ${{ secrets.GITHUB_TOKEN }} | docker login https://docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+      - run: docker build -t ${{ steps.setup_docker.outputs.image_name }} ./${{ matrix.os }}
+      - name: Push ${{ github.sha }} to docker
+        run: |
+          docker tag $(docker images -q  ${{ steps.setup_docker.outputs.image_name }}) ${{ steps.setup_docker.outputs.docker_url }}${{ github.sha }}
+          docker push ${{ steps.setup_docker.outputs.docker_url }}${{ github.sha }}
+      - name: Push latest to docker
+        run: |
+          docker tag $(docker images -q  ${{ steps.setup_docker.outputs.image_name }}) ${{ steps.setup_docker.outputs.docker_url }}latest
+          docker push ${{ steps.setup_docker.outputs.docker_url }}latest

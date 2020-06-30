@@ -1,0 +1,5 @@
+{
+  "name": "dummy-backend",
+  "version": "1.0.0",
+  "dependencies": { "ocaml": "^4.10.0" }
+}
