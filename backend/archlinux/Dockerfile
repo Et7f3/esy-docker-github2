@@ -62,6 +62,7 @@ RUN chmod u+x /usr/bin/gcc
 RUN npm install --verbose --global --unsafe-perm=true esy@0.6.6
 
 
+
 COPY . /project
 RUN ls / /project
 WORKDIR /project/backend
