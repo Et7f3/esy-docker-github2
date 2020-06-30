@@ -45,7 +45,7 @@ jobs:
             dbg("docker_url", `docker.pkg.github.com/${repository_lowercase}/${image_name}:`);
             // We will-pick id later
       - run: echo -n ${{ secrets.GITHUB_TOKEN }} | docker login https://docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-      - run: docker build -t ${{ steps.setup_docker.outputs.image_name }} --build-arg acu=$ACTIONS_CACHE_URL --build-arg aru=ACTIONS_RUNTIME_URL -f ${{ matrix.os }}/Dockerfile ..
+      - run: docker build -t ${{ steps.setup_docker.outputs.image_name }} --build-arg acu=$ACTIONS_CACHE_URL --build-arg aru=$ACTIONS_RUNTIME_URL -f ${{ matrix.os }}/Dockerfile ..
       - name: Push ${{ github.sha }} to docker
         run: |
           docker tag $(docker images -q  ${{ steps.setup_docker.outputs.image_name }}) ${{ steps.setup_docker.outputs.docker_url }}${{ github.sha }}
