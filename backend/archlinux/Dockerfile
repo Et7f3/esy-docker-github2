@@ -1,5 +1,10 @@
 FROM archlinux:latest
 
+ARG acu
+ENV ACTIONS_CACHE_URL=$acu
+ARG aru
+ENV ACTIONS_RUNTIME_URL=$acu
+
 RUN pacman -Syu --noconfirm
 RUN pacman -S --noconfirm base base-devel git npm perl
 #perl for shasum binary
